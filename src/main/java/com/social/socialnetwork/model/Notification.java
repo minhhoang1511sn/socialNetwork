@@ -1,15 +1,21 @@
 package com.social.socialnetwork.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Notification {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
     private User user;
     private String content;
-
-    public Notification(Long id, User user, String content) {
-        this.id = id;
-        this.user = user;
-        this.content = content;
-    }
 
     public Long getId() {
         return id;

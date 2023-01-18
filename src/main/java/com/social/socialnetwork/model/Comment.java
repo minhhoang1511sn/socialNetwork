@@ -1,19 +1,25 @@
 package com.social.socialnetwork.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Comment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
     private User user;
     private String content;
     private String imgLink;
     private String videoLink;
 
-    public Comment(Long id, User user, String content, String imgLink, String videoLink) {
-        this.id = id;
-        this.user = user;
-        this.content = content;
-        this.imgLink = imgLink;
-        this.videoLink = videoLink;
-    }
+
 
     public Long getId() {
         return id;

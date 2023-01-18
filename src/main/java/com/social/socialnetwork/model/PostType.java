@@ -1,17 +1,23 @@
 package com.social.socialnetwork.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
+    @ManyToOne
     private User user;
+    @OneToOne
     private Post post;
-
-    public PostType(Long id, String type, User user, Post post) {
-        this.id = id;
-        this.type = type;
-        this.user = user;
-        this.post = post;
-    }
 
     public Long getId() {
         return id;

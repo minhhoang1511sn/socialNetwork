@@ -1,25 +1,30 @@
 package com.social.socialnetwork.model;
 
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
+@Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
     private User user;
     private Long countLike;
+    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
     private List<Comment> commentList;
+    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
     private List<Image> imageList;
+    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
     private List<Video> videoList;
     private String content;
 
-    public Post(Long id, User user, Long countLike, List<Comment> commentList, List<Image> imageList, List<Video> videoList, String content) {
-        this.id = id;
-        this.user = user;
-        this.countLike = countLike;
-        this.commentList = commentList;
-        this.imageList = imageList;
-        this.videoList = videoList;
-        this.content = content;
-    }
 
     public Long getId() {
         return id;

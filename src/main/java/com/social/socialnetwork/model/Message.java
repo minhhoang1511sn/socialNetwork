@@ -1,19 +1,23 @@
 package com.social.socialnetwork.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Message {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
     private User user;
     private String text;
     private String imgLink;
     private String videoLink;
-
-    public Message(Long id, User user, String text, String imgLink, String videoLink) {
-        this.id = id;
-        this.user = user;
-        this.text = text;
-        this.imgLink = imgLink;
-        this.videoLink = videoLink;
-    }
 
     public Long getId() {
         return id;

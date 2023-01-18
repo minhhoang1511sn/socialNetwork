@@ -1,9 +1,19 @@
 package com.social.socialnetwork.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 import java.util.List;
-
+@Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
@@ -12,29 +22,16 @@ public class User {
     private String password;
     private String avatarLink;
     private Date  birthday;
-    private Boolean sex;
+    private String gender;
+    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
     private List<User> friendList;
+    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
     private List<User> friendReqests;
+    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
     private List<User> fridendRespond;
+    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
     private List<User> suggestions;
     private String role;
-
-    public User(Long id, String firstName, String lastName, String address, String email, String password, String avatarLink, Date birthday, Boolean sex, List<User> friendList, List<User> friendReqests, List<User> fridendRespond, List<User> suggestions, String role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.email = email;
-        this.password = password;
-        this.avatarLink = avatarLink;
-        this.birthday = birthday;
-        this.sex = sex;
-        this.friendList = friendList;
-        this.friendReqests = friendReqests;
-        this.fridendRespond = fridendRespond;
-        this.suggestions = suggestions;
-        this.role = role;
-    }
 
     public Long getId() {
         return id;
@@ -100,12 +97,12 @@ public class User {
         this.birthday = birthday;
     }
 
-    public Boolean getSex() {
-        return sex;
+    public String getGender() {
+        return gender;
     }
 
-    public void setSex(Boolean sex) {
-        this.sex = sex;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public List<User> getFriendList() {
