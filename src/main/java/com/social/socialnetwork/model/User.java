@@ -32,6 +32,7 @@ public class User {
     @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
     private List<User> suggestions;
     private String role;
+    private Boolean Enabled;
 
     public Long getId() {
         return id;
