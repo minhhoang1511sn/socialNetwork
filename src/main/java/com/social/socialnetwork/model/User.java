@@ -1,5 +1,6 @@
 package com.social.socialnetwork.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,13 +31,17 @@ public class User implements UserDetails {
     private String avatarLink;
     private Date  birthday;
     private String gender;
-    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<User> friendList;
-    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<User> friendReqests;
-    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<User> fridendRespond;
-    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<User> suggestions;
     @Enumerated(EnumType.STRING)
     private Role role;

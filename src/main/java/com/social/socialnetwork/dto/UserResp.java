@@ -3,11 +3,11 @@ package com.social.socialnetwork.dto;
 import lombok.Data;
 
 @Data
+
 public class UserResp {
     private Long id;
     private String email;
     private String lastName;
-    private String phone;
     private String gender;
     private String address;
     // admin
