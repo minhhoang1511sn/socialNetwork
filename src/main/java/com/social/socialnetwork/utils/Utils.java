@@ -13,12 +13,29 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 public class Utils {
 
+    private static String pathImg = "Images";
+
+
+    public static String getBaseURL(HttpServletRequest request) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+    }
+
+    public static File convertMultiPartToFile(MultipartFile file) throws IOException {
+        if (!Files.isDirectory(Path.of(pathImg))){
+            File newDir = new File(pathImg);
+            newDir.mkdir();
+        }
+        File convFile = new File(pathImg+"/" +file.getOriginalFilename());
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(file.getBytes());
+        fos.close();
+        return convFile;
+    }
 
     public static Long getIdCurrentUser(){
         Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
         User u = (User) authentication.getPrincipal();
         return u.getId();
     }
-
 
 }
