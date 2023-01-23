@@ -18,6 +18,8 @@ public class Comment {
     private String content;
     private String imgLink;
     private String videoLink;
+    @ManyToOne
+    private Post post;
 
 
 

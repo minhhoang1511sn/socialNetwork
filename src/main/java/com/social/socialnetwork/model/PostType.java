@@ -14,8 +14,6 @@ public class PostType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
-    @ManyToOne
-    private User user;
     @OneToOne
     private Post post;
 
@@ -35,13 +33,6 @@ public class PostType {
         this.type = type;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public Post getPost() {
         return post;

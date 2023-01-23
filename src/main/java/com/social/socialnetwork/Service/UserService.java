@@ -2,15 +2,12 @@ package com.social.socialnetwork.Service;
 
 import com.social.socialnetwork.Service.Cloudinary.CloudinaryUpload;
 import com.social.socialnetwork.dto.UpdateUserReq;
-import com.social.socialnetwork.dto.UserResp;
 import com.social.socialnetwork.exception.AppException;
 import com.social.socialnetwork.model.User;
 import com.social.socialnetwork.repository.UserRepository;
 import com.social.socialnetwork.utils.Utils;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,11 +16,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-
 public class UserService {
     @Autowired
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
     private final CloudinaryUpload cloudinaryUpload;
 
     public User findById(Long id) {

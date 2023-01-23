@@ -17,13 +17,15 @@ public class Post {
     @ManyToOne
     private User user;
     private Long countLike;
-    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
     private List<Comment> commentList;
-    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
     private List<Image> imageList;
     @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
     private List<Video> videoList;
     private String content;
+    @OneToOne
+    private PostType postType;
 
 
     public Long getId() {
