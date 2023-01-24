@@ -22,7 +22,6 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
     private final CloudinaryUpload cloudinaryUpload;
-    private final ModelMapper modelMapper;
 
     public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);

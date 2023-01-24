@@ -1,5 +1,6 @@
 package com.social.socialnetwork.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,8 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     private Long countLike;
     @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
@@ -24,7 +26,7 @@ public class Post {
     @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
     private List<Video> videoList;
     private String content;
-    @OneToOne
+    @Enumerated(EnumType.STRING)
     private PostType postType;
 
 
