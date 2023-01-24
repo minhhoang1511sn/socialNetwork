@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image {
+public class Image implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,6 +20,12 @@ public class Image {
     private Post post;
     @OneToOne(cascade = {CascadeType.ALL})
     private User user;
+
+    public Image(Object o, String imgLink, Post post) {
+        this.imgLink = imgLink;
+        this.post = post;
+
+    }
 
     public Long getId() {
         return id;
