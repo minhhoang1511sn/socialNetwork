@@ -28,7 +28,9 @@ public class User implements UserDetails {
     private String address;
     private String email;
     private String password;
-    private String avatarLink;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    private Image avatarLink;
     private Date  birthday;
     private String gender;
     @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
@@ -126,11 +128,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getAvatarLink() {
+    public Image getAvatarLink() {
         return avatarLink;
     }
 
-    public void setAvatarLink(String avatarLink) {
+    public void setAvatarLink(Image avatarLink) {
         this.avatarLink = avatarLink;
     }
 

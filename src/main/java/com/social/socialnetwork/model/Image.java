@@ -16,6 +16,8 @@ public class Image {
     private String imgLink;
     @ManyToOne(fetch = FetchType.EAGER)
     private Post post;
+    @OneToOne(cascade = {CascadeType.ALL})
+    private User user;
 
     public Long getId() {
         return id;

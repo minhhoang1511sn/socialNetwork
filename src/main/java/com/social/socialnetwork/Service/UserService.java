@@ -3,6 +3,7 @@ package com.social.socialnetwork.Service;
 import com.social.socialnetwork.Service.Cloudinary.CloudinaryUpload;
 import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.exception.AppException;
+import com.social.socialnetwork.model.Image;
 import com.social.socialnetwork.model.User;
 import com.social.socialnetwork.repository.UserRepository;
 import com.social.socialnetwork.utils.Utils;
@@ -56,15 +57,16 @@ public class UserService {
         User user = findById(id);
         if (user == null)
             throw new AppException(404, "User ID not found");
-        String imgUrl = null;
-        if (user.getAvatarLink() != null && user.getAvatarLink().startsWith("https://res.cloudinary.com/minhhoang1511/image/upload")) {
+        Image imgUrl = new Image();
+        if (user.getAvatarLink() != null && user.getAvatarLink().getImgLink().startsWith("https://res.cloudinary.com/minhhoang1511/image/upload")) {
             imgUrl = user.getAvatarLink();
-            imgUrl = cloudinaryUpload.uploadImage(file,imgUrl);
+            imgUrl.setImgLink(cloudinaryUpload.uploadImage(file,imgUrl.getImgLink()));
         }else
-            imgUrl = cloudinaryUpload.uploadImage(file,null);
+            imgUrl.setImgLink(cloudinaryUpload.uploadImage(file,null));
+        imgUrl.setUser(user);
         user.setAvatarLink(imgUrl);
         userRepository.save(user);
-        return imgUrl;
+        return imgUrl.getImgLink();
     }
 
     public User getCurrentUser() {
