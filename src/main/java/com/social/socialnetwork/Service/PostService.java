@@ -10,6 +10,8 @@ import com.social.socialnetwork.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -33,6 +35,11 @@ public class PostService {
         } else {
             throw new AppException(404, "Product or Comment not exits.");
         }
-
     }
+    public Post findById(Long id) {
+        Optional<Post> comment = postRepository.findById(id);
+        return comment.orElse(null);
+    }
+
+   
 }
