@@ -21,7 +21,7 @@ public class Post {
     private List<Comment> commentList;
     @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
     private List<Image> imageList;
-    @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
     private List<Video> videoList;
     private String content;
     @OneToOne
