@@ -39,6 +39,22 @@ public class CloudinaryUpload {
 
         return map.get("secure_url").toString();
     }
+    public String uploadVideo(MultipartFile file, String urlDestroy) throws IOException {
+        Map params = ObjectUtils.asMap(
+                "resource_type", "auto",
+                "folder", "socialNetwork/Video"
+        );
+        Map map = cloudinary().uploader().upload(Utils.convertMultiPartToFile(file),params);
+        if (urlDestroy!= null) {
+            deleteVideo(urlDestroy);
+        }
+
+        return map.get("secure_url").toString();
+    }
+    public void deleteVideo(String urlVideo) throws IOException {
+        cloudinary().uploader().destroy("socialNetwork/" + getPublicId(urlVideo)
+                , ObjectUtils.asMap("resource_type", "video"));
+    }
     public void deleteImage(String urlImage) throws IOException {
         cloudinary().uploader().destroy("socialNetwork/" + getPublicId(urlImage)
                 , ObjectUtils.asMap("resource_type", "image"));

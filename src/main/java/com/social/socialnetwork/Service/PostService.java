@@ -10,6 +10,7 @@ import com.social.socialnetwork.model.Video;
 import com.social.socialnetwork.repository.ImageRepository;
 import com.social.socialnetwork.repository.PostRepository;
 import com.social.socialnetwork.repository.UserRepository;
+import com.social.socialnetwork.repository.VideoRepository;
 import com.social.socialnetwork.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final CloudinaryUpload cloudinaryUpload;
     private final ImageRepository imageRepository;
+    private final VideoRepository videoRepository;
     public Post createPost(PostReq postReq)
     {
         Long idCurrentUser = Utils.getIdCurrentUser();
@@ -99,7 +101,31 @@ public class PostService {
     }
 
 
-    public List<Video> uploadListofVideo(){
-        return  null;
+    public List<String> uploadListofVideo(Long postId, List<MultipartFile> VideoReqs){
+        Long idCurrentUser = Utils.getIdCurrentUser();
+        boolean check = userRepository.existsById(idCurrentUser);
+        List<Video> Videos = new ArrayList<>();
+        Post post = postRepository.getReferenceById(postId);
+        if(check && post!=null){
+            VideoReqs.forEach(v ->{
+                try {
+                    String url = cloudinaryUpload.uploadVideo(v,null);
+                    Video vlement = new Video();
+                    vlement.setLinkVideo(url);
+                    vlement.setPost(post);
+                    Videos.add(vlement);
+                } catch (IOException e) {
+                    throw new AppException(400,"Failed");
+                }
+            });
+            videoRepository.saveAll(Videos);
+            List<String> urls = new ArrayList<>();
+            Videos.forEach(v -> {
+                urls.add(v.getLinkVideo());
+            });
+            return urls;
+        }
+        else
+            return null;
     }
 }

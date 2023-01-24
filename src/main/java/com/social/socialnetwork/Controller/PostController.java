@@ -38,4 +38,11 @@ public class PostController {
         return ResponseEntity.ok(new ResponseDTO(true,"Success",urls));
 
     }
+
+    @PostMapping(value = "/list-of-videos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> listOfVideos(@RequestParam  Long postId, @RequestParam  List<MultipartFile> videos) throws IOException {
+        List<String> urls = postService.uploadListofVideo(postId,videos);
+        return ResponseEntity.ok(new ResponseDTO(true,"Success",urls));
+
+    }
 }
