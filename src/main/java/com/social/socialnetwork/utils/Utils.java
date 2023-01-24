@@ -12,8 +12,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 public class Utils {
-
+    private static String pathMedia = "Media";
     private static String pathImg = "Images";
+    private static String pathVideo = "Videos";
 
 
     public static String getBaseURL(HttpServletRequest request) {
@@ -21,11 +22,11 @@ public class Utils {
     }
 
     public static File convertMultiPartToFile(MultipartFile file) throws IOException {
-        if (!Files.isDirectory(Path.of(pathImg))){
-            File newDir = new File(pathImg);
+        if (!Files.isDirectory(Path.of(pathMedia))){
+            File newDir = new File(pathMedia);
             newDir.mkdir();
         }
-        File convFile = new File(pathImg+"/" +file.getOriginalFilename());
+        File convFile = new File(pathMedia+"/" +file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convFile);
         fos.write(file.getBytes());
         fos.close();

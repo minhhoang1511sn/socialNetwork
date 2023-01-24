@@ -52,7 +52,7 @@ public class CloudinaryUpload {
         return map.get("secure_url").toString();
     }
     public void deleteVideo(String urlVideo) throws IOException {
-        cloudinary().uploader().destroy("socialNetwork/" + getPublicId(urlVideo)
+        cloudinary().uploader().destroy("socialNetwork/video" + getPublicId(urlVideo)
                 , ObjectUtils.asMap("resource_type", "video"));
     }
     public void deleteImage(String urlImage) throws IOException {
