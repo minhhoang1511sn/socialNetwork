@@ -2,7 +2,7 @@ package com.social.socialnetwork.Controller;
 
 import com.social.socialnetwork.Service.UserService;
 import com.social.socialnetwork.dto.ResponseDTO;
-import com.social.socialnetwork.dto.UpdateUserReq;
+import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.model.User;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +26,7 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
     @PutMapping("/user")
-    public ResponseEntity<?> updateUser(@RequestBody UpdateUserReq userReq){
+    public ResponseEntity<?> updateUser(@RequestBody UserReq userReq){
         User usersUpdate = userService.updateUser(userReq);
         if (usersUpdate!= null){
             return ResponseEntity.ok(new ResponseDTO(true,"Success",usersUpdate));

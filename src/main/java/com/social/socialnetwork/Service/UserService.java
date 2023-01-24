@@ -1,12 +1,13 @@
 package com.social.socialnetwork.Service;
 
 import com.social.socialnetwork.Service.Cloudinary.CloudinaryUpload;
-import com.social.socialnetwork.dto.UpdateUserReq;
+import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.exception.AppException;
 import com.social.socialnetwork.model.User;
 import com.social.socialnetwork.repository.UserRepository;
 import com.social.socialnetwork.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,13 +21,14 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
     private final CloudinaryUpload cloudinaryUpload;
+    private final ModelMapper modelMapper;
 
     public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
     }
 
-    public User updateUser(UpdateUserReq userReq){
+    public User updateUser(UserReq userReq){
         User userUpdate = findById(Utils.getIdCurrentUser());
         if (userUpdate != null) {
             if (userReq.getFirstName()!=null && !userReq.getFirstName().trim().equals(""))
@@ -35,10 +37,14 @@ public class UserService {
                 userUpdate.setLastName(userReq.getLastName().trim().replaceAll("  "," "));
             if (userReq.getGender()!=null && !userReq.getGender().trim().equals(""))
                 userUpdate.setGender(userReq.getGender().trim().replaceAll("  "," "));
-            if (userReq.getGender()!=null && !userReq.getGender().trim().equals(""))
-                userUpdate.setGender(userReq.getGender().trim().replaceAll("  "," "));
-            if (userReq.getAddress()!=null && userReq.getAddress().trim().equals("")) {
-                userUpdate.setAddress(userReq.getAddress().trim().replaceAll("  "," "));
+            if (userReq.getAddress()!=null && !userReq.getAddress().trim().equals("")) {
+                userUpdate.setAddress(userReq.getAddress());
+            }
+            if (userReq.getBirthday()!=null) {
+                userUpdate.setBirthday(userReq.getBirthday());
+            }
+            if (userReq.getRole()!=null) {
+                userUpdate.setRole(userReq.getRole());
             }
             userRepository.save(userUpdate);
             return userUpdate;
