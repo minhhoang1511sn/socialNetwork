@@ -19,12 +19,6 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     private Long countLike;
-    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
-    private List<Comment> commentList;
-    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
-    private List<Image> imageList;
-    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
-    private List<Video> videoList;
     private String content;
     @Enumerated(EnumType.STRING)
     private PostType postType;
@@ -52,30 +46,6 @@ public class Post {
 
     public void setCountLike(Long countLike) {
         this.countLike = countLike;
-    }
-
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
-    }
-
-    public List<Image> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(List<Image> imageList) {
-        this.imageList = imageList;
-    }
-
-    public List<Video> getVideoList() {
-        return videoList;
-    }
-
-    public void setVideoList(List<Video> videoList) {
-        this.videoList = videoList;
     }
 
     public String getContent() {

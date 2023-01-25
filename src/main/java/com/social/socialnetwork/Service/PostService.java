@@ -36,27 +36,14 @@ public class PostService {
         if(check){
                 Post post = new Post();
                 User user = userRepository.getReferenceById(idCurrentUser);
-                post.setCommentList(postReq.getCommentList());
                 post.setContent(postReq.getContent());
                 post.setCountLike(postReq.getCountLike());
-                post.setImageList(postReq.getImageList());
-                post.setVideoList(postReq.getVideoList());
                 post.setPostType(postReq.getPostType());
                 post.setUser(user);
                 return postRepository.save(post);
         } else {
             throw new AppException(404, "Product or Comment not exits.");
         }
-    }
-    public Post findById(Long id) {
-        Optional<Post> comment = postRepository.findById(id);
-        return comment.orElse(null);
-    }
-
-    public String upImage(MultipartFile file) throws IOException {
-        Image imgUrl = new Image();
-        cloudinaryUpload.uploadImage(file,null);
-        return imgUrl.getImgLink();
     }
     public List<String> uploadListofImage(Long postId, List<MultipartFile> images) throws IOException {
         Long idCurrentUser = Utils.getIdCurrentUser();
@@ -86,21 +73,6 @@ public class PostService {
             return null;
 
     }
-    public boolean saveNewImage(PostReq postReq, List<Image> ImageReqs) {
-        Long idCurrentUser = Utils.getIdCurrentUser();
-        boolean check = userRepository.existsById(idCurrentUser);
-        Post postcurr = postRepository.getReferenceById(postReq.getId());
-        if(check && postcurr!=null) {
-            List<Image> Images = new ArrayList<>();
-            ImageReqs.forEach(image -> {
-                Post post = postRepository.getReferenceById(image.getPost().getId());
-                Images.add(new Image(null, image.getImgLink(), post));
-            });
-            return imageRepository.saveAll(Images).size() > 0;
-        }else return false;
-    }
-
-
     public List<String> uploadListofVideo(Long postId, List<MultipartFile> VideoReqs){
         Long idCurrentUser = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(idCurrentUser);

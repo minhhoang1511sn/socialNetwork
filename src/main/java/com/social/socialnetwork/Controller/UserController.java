@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -21,9 +22,14 @@ import java.io.IOException;
 public class UserController {
     private final UserService userService;
     @GetMapping("/user")
-    public ResponseEntity<?> getUser(){
+    public ResponseEntity<?> getCurrentUser(){
         User user = userService.getCurrentUser();
         return ResponseEntity.ok().body(user);
+    }
+    @GetMapping("/alluser")
+    public ResponseEntity<?> getAllUser(){
+        List<User> userlist = userService.findAllUser();
+        return ResponseEntity.ok().body(userlist);
     }
     @PutMapping("/user")
     public ResponseEntity<?> updateUser(@RequestBody UserReq userReq){

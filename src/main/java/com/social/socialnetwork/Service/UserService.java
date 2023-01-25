@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,7 +28,10 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
     }
-
+    public List<User> findAllUser() {
+        List<User> users = userRepository.findAll();
+        return users;
+    }
     public User updateUser(UserReq userReq){
         User userUpdate = findById(Utils.getIdCurrentUser());
         if (userUpdate != null) {
