@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,10 +27,12 @@ public class AuthenticationController {
     private final EmailService emailService;
     @PostMapping("/sendingEmail")
     public MailRespone sendEmail(@RequestBody MailRequest mailRequest){
+        SecureRandom rand = new SecureRandom();
+        int _otp = rand.nextInt(1000000);
+        String OTP = String.valueOf(_otp);
         Map<String,Object> model = new HashMap<>();
-        model.put("Name",mailRequest.getName());
-        model.put("location","HoChiMinhCity");
-
+        model.put("fullname",mailRequest.getFirstName() + " " + mailRequest.getLastName());
+        model.put("otp", OTP);
         return emailService.sendEmail(mailRequest,model);
     }
     @PostMapping("/register")
