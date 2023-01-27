@@ -25,15 +25,16 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private String OTP;
     @PostMapping("/sendingEmail")
-    public MailRespone sendEmail(@RequestBody MailRequest mailRequest){
+    public MailRespone sendEmail(@RequestBody MailRequest request){
         SecureRandom rand = new SecureRandom();
         int _otp = rand.nextInt(1000000);
-        String OTP = String.valueOf(_otp);
+        OTP = String.valueOf(_otp);
         Map<String,Object> model = new HashMap<>();
-        model.put("fullname",mailRequest.getFirstName() + " " + mailRequest.getLastName());
+        model.put("fullname",request.getFirstName() + " " + request.getLastName());
         model.put("otp", OTP);
-        return emailService.sendEmail(mailRequest,model);
+        return emailService.sendEmail(request,model);
     }
     @PostMapping("/register")
     public ResponseEntity<?> register(

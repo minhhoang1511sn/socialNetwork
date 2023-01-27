@@ -10,6 +10,7 @@ import com.social.socialnetwork.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
     private final CloudinaryUpload cloudinaryUpload;
+    private final PasswordEncoder passwordEncoder;
 
     public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);
@@ -55,6 +57,15 @@ public class UserService {
         } else return null;
 
     }
+    public void changePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public boolean checkIfValidOldPassword(User user, String oldPassword) {
+        return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
     public String upAvartar(MultipartFile file) throws IOException {
         Long id = Utils.getIdCurrentUser();
         User user = findById(id);
