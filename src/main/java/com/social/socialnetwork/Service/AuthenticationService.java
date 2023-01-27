@@ -4,9 +4,11 @@ import com.social.socialnetwork.config.JwtService;
 import com.social.socialnetwork.dto.AuthenticationReqest;
 import com.social.socialnetwork.dto.AuthenticationResponse;
 import com.social.socialnetwork.dto.RegisterReqest;
+import com.social.socialnetwork.exception.AppException;
 import com.social.socialnetwork.model.Role;
 import com.social.socialnetwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.validator.GenericValidator;
 
 import com.social.socialnetwork.model.User;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +24,12 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     public AuthenticationResponse register(RegisterReqest request) {
+        if (!GenericValidator.isEmail(request.getEmail()))
+            throw new AppException(400, "Wrong email");
+        boolean check = userRepository.existsByEmail(request.getEmail());
+        if (check) {
+            throw new AppException(400,"Email already exits");
+        }
 
         var user = User.builder()
                 .firstName(request.getFirstName())
