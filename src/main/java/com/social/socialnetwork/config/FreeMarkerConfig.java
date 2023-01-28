@@ -6,12 +6,14 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
 @Configuration
-public class ApiConfig {
+public class FreeMarkerConfig {
     @Primary
     @Bean
-    public FreeMarkerConfigurationFactoryBean factoryBean(){
+    public FreeMarkerConfigurationFactoryBean freeMarkerBean(){
         FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
         bean.setTemplateLoaderPath("classpath:/templates");
         return bean;
     }
 }
+
+

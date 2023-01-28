@@ -1,52 +1,55 @@
 package com.social.socialnetwork.Service;
 
-import com.social.socialnetwork.dto.MailRequest;
-import com.social.socialnetwork.dto.MailRespone;
-import com.social.socialnetwork.dto.RegisterReqest;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
+
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+
 @Service
+@Async
+@Slf4j
 public class EmailService {
+
     @Autowired
-    private  JavaMailSender sender;
+    private JavaMailSender mailSender;
     @Autowired
-    private Configuration config;
+    private  Configuration configuration;
 
-    public MailRespone sendEmail(MailRequest request, Map<String,Object> model){
-        MailRespone respone = new MailRespone();
-        MimeMessage mimeMessage = sender.createMimeMessage();
-        try{
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,MimeMessageHelper.MULTIPART_MODE_RELATED
-            , StandardCharsets.UTF_8.name());
+    final String REIGSTER_TEMPLATE = "register-template.ftl";
+    final String FROM_EMAIL = "socialwebproject1511@gmail.com";
+    final String TYPE_EMAIL = "text/html";
 
-//            helper.addAttachment("logo.png",new ClassPathResource("logo.png"));
 
-            Template t = config.getTemplate("email-template.ftl");
-            String html = FreeMarkerTemplateUtils.processTemplateIntoString(t,model);
+    public void sendEmail(String toEmail,
+                          Map<String,Object> model) throws IOException, TemplateException,MessagingException {
+        log.info(Thread.currentThread().getName()+ "- send email start");
+        MimeMessage mimeMailMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMailMessage);
+        Template template = configuration.getTemplate(REIGSTER_TEMPLATE);
 
-            helper.setTo(request.getTo());
-            helper.setText(html,true);
-            helper.setSubject(request.getSubject());
-            helper.setFrom(request.getFrom());
-            sender.send(mimeMessage);
+        String html = FreeMarkerTemplateUtils.processTemplateIntoString(template,model);
+        mimeMailMessage.setContent(html, TYPE_EMAIL);
 
-            respone.setMessage("Mail sending to: "+ request.getTo());
-            respone.setStatus(Boolean.TRUE);
-        } catch ( IOException | TemplateException | MessagingException e) {
-            respone.setMessage("Mail sending failure: "+ e.getMessage());
-            respone.setStatus(Boolean.FALSE);
-        }
-        return respone;
+        helper.setFrom(FROM_EMAIL);
+        helper.setTo(toEmail);
+        helper.setText(html,true);
+        helper.setSubject((String) model.get("subject"));
+
+        mailSender.send(mimeMailMessage);
+        log.info(Thread.currentThread().getName()+ "- send email");
     }
+
 }
