@@ -20,15 +20,13 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private static final String[] WHITE_LIST_URLS = {
             "/api/v1/auth/**",
-            "/api/v1/auth/authenticate/**",
-            "/api/v1/auth/register-email",
-            "/api/v1/auth/verifyRegistration/*",
     };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.authorizeHttpRequests().requestMatchers(WHITE_LIST_URLS).permitAll();
+
         http
+                .csrf()
+                .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(WHITE_LIST_URLS)
                 .permitAll()

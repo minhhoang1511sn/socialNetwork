@@ -185,7 +185,7 @@
                         <p style="margin: 0;">To verify your email address, please use the following One Time Password
                             (OTP):
                         </p>
-                        <h2>${code}</h2>
+                        <h2>${token}</h2>
                     </td>
                 </tr>
                 <!-- end button -->

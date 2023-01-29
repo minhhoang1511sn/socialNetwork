@@ -3,18 +3,23 @@ package com.social.socialnetwork.Service;
 import com.social.socialnetwork.Service.Cloudinary.CloudinaryUpload;
 import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.exception.AppException;
+import com.social.socialnetwork.model.ConfirmationToken;
 import com.social.socialnetwork.model.Image;
+import com.social.socialnetwork.model.Role;
 import com.social.socialnetwork.model.User;
-import com.social.socialnetwork.repository.ConfirmationCodeRepository;
+import com.social.socialnetwork.repository.ConfirmationTokenRepository;
 import com.social.socialnetwork.repository.UserRepository;
 import com.social.socialnetwork.utils.Utils;
+import com.social.socialnetwork.utils.constant.RoleConstant;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final CloudinaryUpload cloudinaryUpload;
     private final PasswordEncoder passwordEncoder;
-    private final ConfirmationCodeRepository confirmationCodeRepository;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
 
     public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);

@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,15 +36,15 @@ public class AuthenticationController {
 
     @PostMapping("/register-email")
     public ResponseEntity<?> register(
-            @Valid @RequestBody RegisterReqest request
+            @RequestBody RegisterReqest request
     ) throws TemplateException, MessagingException, IOException {
-        ResponseEntity.ok(authenticationService.register(request));
+         authenticationService.register(request);
         User users = userRepository.findUserByEmail(request.getEmail());
-        String code = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
-        authenticationService.saveVerificationCodeForUser(users,code);
+        String token = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
+        authenticationService.saveVerificationTokenForUser(users,token);
 
         Map<String,Object> model = new HashMap<>();
-        model.put("code",code);
+        model.put("token",token);
         model.put("title", TITLE_SUBJECT_EMAIL);
         model.put("subject", TITLE_SUBJECT_EMAIL);
         emailService.sendEmail(request.getEmail(), model);
@@ -53,13 +52,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(new ResponseDTO(true,"Sending email",
                 null));
     }
-    @RequestMapping(value = "/verifyRegistration/{email}/{code}", method = RequestMethod.GET)
-    public ResponseEntity<?> verifyRegistration(@PathVariable String code, @PathVariable String email) {
-        AuthenticationResponse result = authenticationService.validateVerificationCode(code,email);
-        if(result == null) {
+    @RequestMapping(value = "/verifyRegistration", method = RequestMethod.GET)
+    public ResponseEntity<?> verifyRegistration(@RequestParam(required=false, value = "code") String code,
+                                                @RequestParam(required=false, value = "email") String email) {
+        String result = authenticationService.validateVerificationCode(code,email);
+        if(!result.equals("valid")) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok("");
     }
 
     @PostMapping("/authenticate")
