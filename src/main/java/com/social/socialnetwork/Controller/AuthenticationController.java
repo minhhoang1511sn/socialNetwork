@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,15 +37,15 @@ public class AuthenticationController {
 
     @PostMapping("/register-email")
     public ResponseEntity<?> register(
-            @RequestBody RegisterReqest request
+            @Valid @RequestBody RegisterReqest request
     ) throws TemplateException, MessagingException, IOException {
-         authenticationService.register(request);
+        ResponseEntity.ok(authenticationService.register(request));
         User users = userRepository.findUserByEmail(request.getEmail());
-        String token = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
-        authenticationService.saveVerificationTokenForUser(users,token);
+        String code = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
+        authenticationService.saveVerificationCodeForUser(users,code);
 
         Map<String,Object> model = new HashMap<>();
-        model.put("token",token);
+        model.put("code",code);
         model.put("title", TITLE_SUBJECT_EMAIL);
         model.put("subject", TITLE_SUBJECT_EMAIL);
         emailService.sendEmail(request.getEmail(), model);
@@ -52,14 +53,13 @@ public class AuthenticationController {
         return ResponseEntity.ok(new ResponseDTO(true,"Sending email",
                 null));
     }
-    @RequestMapping(value = "/verifyRegistration", method = RequestMethod.GET)
-    public ResponseEntity<?> verifyRegistration(@RequestParam(required=false, value = "token") String token,
-                                                @RequestParam(required=false, value = "email") String email) {
-        String result = authenticationService.validateVerificationToken(token,email);
-        if(!result.equals("valid")) {
+    @RequestMapping(value = "/verifyRegistration/{email}/{code}", method = RequestMethod.GET)
+    public ResponseEntity<?> verifyRegistration(@PathVariable String code, @PathVariable String email) {
+        AuthenticationResponse result = authenticationService.validateVerificationCode(code,email);
+        if(result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/authenticate")

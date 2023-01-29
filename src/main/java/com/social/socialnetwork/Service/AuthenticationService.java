@@ -5,9 +5,9 @@ import com.social.socialnetwork.dto.AuthenticationReqest;
 import com.social.socialnetwork.dto.AuthenticationResponse;
 import com.social.socialnetwork.dto.RegisterReqest;
 import com.social.socialnetwork.exception.AppException;
-import com.social.socialnetwork.model.ConfirmationToken;
+import com.social.socialnetwork.model.ConfirmationCode;
 import com.social.socialnetwork.model.Role;
-import com.social.socialnetwork.repository.ConfirmationTokenRepository;
+import com.social.socialnetwork.repository.ConfirmationCodeRepository;
 import com.social.socialnetwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.GenericValidator;
@@ -27,8 +27,8 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final ConfirmationTokenRepository confirmationTokenRepository;
-    public AuthenticationResponse register(RegisterReqest request) {
+    private final ConfirmationCodeRepository confirmationCodeRepository;
+    public User register(RegisterReqest request) {
         if (!GenericValidator.isEmail(request.getEmail()))
             throw new AppException(400, "Wrong email");
         boolean check = userRepository.existsByEmail(request.getEmail());
@@ -44,10 +44,7 @@ public class AuthenticationService {
                 .role(Role.USER)
                 .Enabled(request.getEnabled())
                 .build();
-        userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken).build();
+       return userRepository.save(user);
     }
 
     public AuthenticationResponse authenticate(AuthenticationReqest reqest) {
@@ -64,35 +61,35 @@ public class AuthenticationService {
                 .token(jwtToken).build();
     }
 
-    public void saveVerificationTokenForUser(User users, String token) {
-        ConfirmationToken  verificationToken = new ConfirmationToken(users, token);
-        System.out.println(verificationToken.getExpirationTime());
-        confirmationTokenRepository.save(verificationToken);
+    public void saveVerificationCodeForUser(User users, String code) {
+        ConfirmationCode verificationCode = new ConfirmationCode(users, code);
+        System.out.println(verificationCode.getExpirationTime());
+        confirmationCodeRepository.save(verificationCode);
     }
-    public String validateVerificationToken(String token, String email) {
-        ConfirmationToken verificationToken
-                = confirmationTokenRepository.findVerificationTokenByTokenAndUser_Email(token, email);
+    public AuthenticationResponse validateVerificationCode(String code, String email) {
+        ConfirmationCode verificationCode
+                = confirmationCodeRepository.findVerificationCodeByCodeAndUser_Email(code, email);
 
-        if (verificationToken == null) {
-            return "invalid";
+        if (verificationCode == null) {
+            return null;
         }
 
-        User user = verificationToken.getUser();
+        User user = verificationCode.getUser();
         Calendar cal = Calendar.getInstance();
 
-        if ((verificationToken.getExpirationTime().getTime()
+        if ((verificationCode.getExpirationTime().getTime()
                 - cal.getTime().getTime()) <= 0) {
-            confirmationTokenRepository.delete(verificationToken);
-            return "expired";
+            confirmationCodeRepository.delete(verificationCode);
+            return null;
         }
-        verificationToken.setToken(null);
-        confirmationTokenRepository.save(verificationToken);
+        verificationCode.setToken(null);
+        confirmationCodeRepository.save(verificationCode);
         user.setEnabled(true);
         user.setRole(Role.USER);
         userRepository.save(user);
-
-        return "valid";
-
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken).build();
     }
 
 }
