@@ -52,9 +52,9 @@ public class AuthenticationController {
         return ResponseEntity.ok(new ResponseDTO(true,"Sending email",
                 null));
     }
-    @RequestMapping(value = "/verifyRegistration/{email}/{code}", method = RequestMethod.GET)
-    public ResponseEntity<?> verifyRegistration(@PathVariable(value = "code") String code,
-                                                @PathVariable(value = "email") String email) {
+    @RequestMapping(value = "/verifyRegistration", method = RequestMethod.GET)
+    public ResponseEntity<?> verifyRegistration(@RequestParam String code,
+                                                @RequestParam String email) {
         AuthenticationResponse result = authenticationService.validateVerificationCode(code,email);
         if(result==null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -68,7 +68,10 @@ public class AuthenticationController {
     )
     {
         if(userRepository.findByEmail(request.getEmail()).isPresent())
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        {   if(authenticationService.authenticate(request) != null)
+            return ResponseEntity.ok(authenticationService.authenticate(request));
+            else return  ResponseEntity.ok("Email is not authenticate");
+        }
         else return  ResponseEntity.ok("Email is not Exists");
     }
     @GetMapping(value="/logout")

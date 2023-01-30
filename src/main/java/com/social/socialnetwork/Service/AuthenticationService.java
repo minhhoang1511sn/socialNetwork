@@ -57,9 +57,15 @@ public class AuthenticationService {
         );
         var user = userRepository.findByEmail(reqest.getEmail())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken).build();
+        if(!user.getEnabled())
+        {
+           return null;
+        }
+        else {
+            var jwtToken = jwtService.generateToken(user);
+            return AuthenticationResponse.builder()
+                    .token(jwtToken).build();
+        }
     }
 
     public void saveVerificationTokenForUser(User users, String token) {
