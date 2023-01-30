@@ -56,6 +56,7 @@ public class PostService {
     public List<String> uploadListofImage(Long postId, List<MultipartFile> images) throws IOException {
         Long idCurrentUser = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(idCurrentUser);
+        User user = userRepository.findUserById(idCurrentUser);
         List<Image> Images = new ArrayList<>();
         Post post = postRepository.getReferenceById(postId);
         if(check && post!=null){
@@ -65,6 +66,7 @@ public class PostService {
                     Image imgelement = new Image();
                     imgelement.setImgLink(url);
                     imgelement.setPost(post);
+                    imgelement.setUser(user);
                     Images.add(imgelement);
                 } catch (IOException e) {
                     throw new AppException(400,"Failed");
@@ -85,6 +87,7 @@ public class PostService {
     public List<String> uploadListofVideo(Long postId, List<MultipartFile> VideoReqs){
         Long idCurrentUser = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(idCurrentUser);
+        User user = userRepository.findUserById(idCurrentUser);
         List<Video> Videos = new ArrayList<>();
         Post post = postRepository.getReferenceById(postId);
         if(check && post!=null){
@@ -94,6 +97,7 @@ public class PostService {
                     Video vlement = new Video();
                     vlement.setLinkVideo(url);
                     vlement.setPost(post);
+                    vlement.setUser(user);
                     Videos.add(vlement);
                 } catch (IOException e) {
                     throw new AppException(400,"Failed");

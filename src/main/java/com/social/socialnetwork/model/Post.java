@@ -22,11 +22,11 @@ public class Post {
     private String content;
     @Enumerated(EnumType.STRING)
     private PostType postType;
-    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
     private List<Comment> commentList;
-    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
     private List<Image> imagesList;
-    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
     private List<Video> videosList;
     public Long getId() {
         return id;
