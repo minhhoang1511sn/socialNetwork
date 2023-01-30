@@ -68,7 +68,7 @@ public class AuthenticationService {
         }
     }
 
-    public void saveVerificationTokenForUser(User users, String token) {
+    public void saveVerificationCodeForUser(User users, String token) {
         ConfirmationCode verificationToken = new ConfirmationCode(users, token);
         System.out.println(verificationToken.getExpirationTime());
         confirmationCodeRepository.save(verificationToken);
