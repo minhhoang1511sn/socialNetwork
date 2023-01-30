@@ -47,7 +47,8 @@ public class UserController {
                 description = "Files to be uploaded",
             content =  @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     )
-                                      @RequestParam("image") MultipartFile file) throws IOException {
+                                      @RequestParam(value = "image", required =
+                                              false) MultipartFile file) throws IOException {
         String url = userService.upAvartar(file);
 
         return ResponseEntity.ok().body(new ResponseDTO(true,"Success",

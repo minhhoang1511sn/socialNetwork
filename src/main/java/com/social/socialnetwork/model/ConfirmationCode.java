@@ -14,7 +14,7 @@ import java.util.Date;
 @Table(name = "confirmationToken")
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConfirmationToken  implements Serializable {
+public class ConfirmationCode implements Serializable {
     private static  final int EXPIRATION_TIME = 10;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,17 +25,17 @@ public class ConfirmationToken  implements Serializable {
 
     private Date expirationTime;
 
-    private String token;
+    private String code;
 
-    public ConfirmationToken(User user, String token) {
+    public ConfirmationCode(User user, String code) {
         super();
-        this.token = token;
+        this.code = code;
         this.user = user;
         this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setToken(String code) {
+        this.code = code;
         this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);
     }
 

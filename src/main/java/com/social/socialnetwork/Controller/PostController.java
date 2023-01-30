@@ -33,7 +33,7 @@ public class PostController {
     }
 
     @PostMapping(value = "/list-of-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> listOfImages(@RequestParam  Long postId, @RequestParam  List<MultipartFile> images) throws IOException {
+    public ResponseEntity<?> listOfImages(@RequestParam  Long postId, @RequestParam List<MultipartFile> images) throws IOException {
         List<String> urls = postService.uploadListofImage(postId,images);
         return ResponseEntity.ok(new ResponseDTO(true,"Success",urls));
 
