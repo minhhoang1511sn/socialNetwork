@@ -58,6 +58,9 @@ public class UserService {
         } else return null;
 
     }
+    public User findUserByEmail(String email){
+        return userRepository.findUserByEmail(email);
+    }
     public void changePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);

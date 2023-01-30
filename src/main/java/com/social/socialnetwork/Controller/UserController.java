@@ -1,6 +1,7 @@
 package com.social.socialnetwork.Controller;
 
 import com.social.socialnetwork.Service.UserService;
+import com.social.socialnetwork.dto.PasswordDTO;
 import com.social.socialnetwork.dto.ResponseDTO;
 import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.model.User;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -41,6 +43,19 @@ public class UserController {
                     .body(new ResponseDTO(false,"User ID not exits",null));
 
     }
+    @PutMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody PasswordDTO passwordDTO){
+        User user = userService.findUserByEmail(passwordDTO.getEmail());
+        if(!userService.checkIfValidOldPassword(user,passwordDTO.getOldPassword())) {
+            return ResponseEntity.ok().body(new ResponseDTO(false,"Invalid Old Password",
+                    null));
+        }
+        //Save New Password
+        userService.changePassword(user, passwordDTO.getNewPassword());
+        return ResponseEntity.ok().body(new ResponseDTO(true,"Password Changed Successfully",
+                null));
+    }
+
     @PutMapping(value = "/user/avatar",consumes = {
             "multipart/form-data"})
     public ResponseEntity<?> upAvatar(@Parameter(
