@@ -45,6 +45,14 @@ public class PostService {
             throw new AppException(404, "Product or Comment not exits.");
         }
     }
+    public List<Post> getAllPost()
+    {
+        Long idCurrentUser = Utils.getIdCurrentUser();
+        User user = userRepository.findUserById(idCurrentUser);
+        List<Post> posts = postRepository.findPostByUser(user);
+        return posts;
+    }
+
     public List<String> uploadListofImage(Long postId, List<MultipartFile> images) throws IOException {
         Long idCurrentUser = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(idCurrentUser);
@@ -63,6 +71,7 @@ public class PostService {
                 }
             });
             imageRepository.saveAll(Images);
+            post.setImagesList(Images);
             List<String> urls = new ArrayList<>();
             Images.forEach(img -> {
                 urls.add(img.getImgLink());

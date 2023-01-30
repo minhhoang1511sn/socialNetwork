@@ -4,6 +4,8 @@ import com.social.socialnetwork.Service.PostService;
 import com.social.socialnetwork.dto.PostReq;
 import com.social.socialnetwork.dto.ResponseDTO;
 import com.social.socialnetwork.model.Image;
+import com.social.socialnetwork.model.Post;
+import com.social.socialnetwork.repository.PostRepository;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
     @PostMapping("/post")
     public ResponseEntity<?> createPost(@RequestBody PostReq postReq) {
         try {
@@ -33,10 +34,15 @@ public class PostController {
     }
 
     @PostMapping(value = "/list-of-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> listOfImages(@RequestParam  Long postId, @RequestParam List<MultipartFile> images) throws IOException {
+    public ResponseEntity<?> listOfImages(@RequestParam Long postId, @RequestParam List<MultipartFile> images) throws IOException {
         List<String> urls = postService.uploadListofImage(postId,images);
         return ResponseEntity.ok(new ResponseDTO(true,"Success",urls));
 
+    }
+    @GetMapping("/posts")
+    public ResponseEntity<?> listPost(){
+        List<Post> posts = postService.getAllPost();
+        return ResponseEntity.ok(new ResponseDTO(true,"Success",posts));
     }
 
     @PostMapping(value = "/list-of-videos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

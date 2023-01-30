@@ -1,5 +1,6 @@
 package com.social.socialnetwork.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String linkVideo;
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Post post;
 

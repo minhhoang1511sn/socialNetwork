@@ -1,5 +1,6 @@
 package com.social.socialnetwork.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class Image implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String imgLink;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Post post;
     @OneToOne(cascade = {CascadeType.ALL})

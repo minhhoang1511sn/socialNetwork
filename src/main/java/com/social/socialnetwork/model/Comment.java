@@ -1,5 +1,6 @@
 package com.social.socialnetwork.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class Comment {
     private String content;
     private String imgLink;
     private String videoLink;
+    @JsonIgnore
     @ManyToOne
     private Post post;
 

@@ -24,10 +24,44 @@ public class Post {
     private PostType postType;
     @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
     private List<Comment> commentList;
-
-
+    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
+    private List<Image> imagesList;
+    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER)
+    private List<Video> videosList;
     public Long getId() {
         return id;
+    }
+
+    public PostType getPostType() {
+        return postType;
+    }
+
+    public void setPostType(PostType postType) {
+        this.postType = postType;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
+    }
+
+    public List<Image> getImagesList() {
+        return imagesList;
+    }
+
+    public void setImagesList(List<Image> imagesList) {
+        this.imagesList = imagesList;
+    }
+
+    public List<Video> getVideosList() {
+        return videosList;
+    }
+
+    public void setVideosList(List<Video> videosList) {
+        this.videosList = videosList;
     }
 
     public void setId(Long id) {
