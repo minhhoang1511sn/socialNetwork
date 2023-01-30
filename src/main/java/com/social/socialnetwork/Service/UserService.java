@@ -3,18 +3,21 @@ package com.social.socialnetwork.Service;
 import com.social.socialnetwork.Service.Cloudinary.CloudinaryUpload;
 import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.exception.AppException;
+import com.social.socialnetwork.model.ConfirmationCode;
 import com.social.socialnetwork.model.Image;
 import com.social.socialnetwork.model.User;
 import com.social.socialnetwork.repository.ConfirmationCodeRepository;
 import com.social.socialnetwork.repository.UserRepository;
 import com.social.socialnetwork.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +68,29 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+    public ConfirmationCode SendVerifyCode(String email) {
+        ConfirmationCode verificationCode = confirmationCodeRepository.findVerificationCodeByUserEmail(email);
+        if (verificationCode != null) {
+            String code = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
+            verificationCode.setCode(code);
+            confirmationCodeRepository.save(verificationCode);
+            return verificationCode;
+        }
+        return null;
+    }
+    public User validatePasswordResetCode(String code, String email) {
+        ConfirmationCode verificationToken
+                = confirmationCodeRepository.findVerificationCodeByCodeAndUser_Email(code, email);
+
+        if (verificationToken == null) {
+            return null;
+        }
+        User users = verificationToken.getUser();
+        verificationToken.setToken(null);
+        confirmationCodeRepository.save(verificationToken);
+        return users;
+    }
+
 
     public boolean checkIfValidOldPassword(User user, String oldPassword) {
         return passwordEncoder.matches(oldPassword, user.getPassword());

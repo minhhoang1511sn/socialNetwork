@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ConfirmationCodeRepository extends JpaRepository<ConfirmationCode,Long> {
 
     ConfirmationCode findVerificationCodeByCodeAndUser_Email(String code, String email);
+
+    ConfirmationCode findVerificationCodeByUserEmail(String email);
 }

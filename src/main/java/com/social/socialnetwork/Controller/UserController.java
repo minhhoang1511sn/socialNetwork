@@ -5,8 +5,11 @@ import com.social.socialnetwork.dto.PasswordDTO;
 import com.social.socialnetwork.dto.ResponseDTO;
 import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.model.User;
+import freemarker.template.TemplateException;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,6 +58,7 @@ public class UserController {
         return ResponseEntity.ok().body(new ResponseDTO(true,"Password Changed Successfully",
                 null));
     }
+
 
     @PutMapping(value = "/user/avatar",consumes = {
             "multipart/form-data"})

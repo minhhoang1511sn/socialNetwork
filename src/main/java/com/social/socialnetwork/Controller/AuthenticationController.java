@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,12 +40,12 @@ public class AuthenticationController {
             @RequestBody RegisterReqest request
     ) throws TemplateException, MessagingException, IOException {
          authenticationService.register(request);
-        User users = userRepository.findUserByEmail(request.getEmail());
-        String token = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
-        authenticationService.saveVerificationTokenForUser(users,token);
+        User user = userRepository.findUserByEmail(request.getEmail());
+        String code = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
+        authenticationService.saveVerificationTokenForUser(user,code);
 
         Map<String,Object> model = new HashMap<>();
-        model.put("token",token);
+        model.put("code",code);
         model.put("title", TITLE_SUBJECT_EMAIL);
         model.put("subject", TITLE_SUBJECT_EMAIL);
         emailService.sendEmail(request.getEmail(), model);
@@ -60,6 +61,42 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(result);
+    }
+    @PostMapping("/resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestParam String email)
+            throws MessagingException, TemplateException, IOException {
+        User user = userService.findUserByEmail(email);
+        if (user!= null && user.getEnabled()){
+            String code = "";
+            code = userService.SendVerifyCode(email).getCode();
+            Map<String,Object> model = new HashMap<>();
+            model.put("code",code);
+            model.put("title", RESET_PASSWORD_TOKEN);
+            model.put("subject", RESET_PASSWORD_TOKEN);
+            //Send email
+            emailService.sendEmail(user.getEmail(), model);
+
+            return ResponseEntity.ok(new ResponseDTO(true,"Sent email reset verify code",
+                    null));
+        }
+        return ResponseEntity.badRequest().body(new ResponseDTO(false,"Not found email",
+                null));
+    }
+    @PostMapping("/saveNewPassword")
+    public ResponseEntity<?> savePassword(@Valid @RequestBody PasswordDTO passwordDTO) {
+        User result = userService.validatePasswordResetCode(passwordDTO.getVerifyCode(), passwordDTO.getEmail());
+        if(result == null) {
+
+            return ResponseEntity.badRequest().body(new ResponseDTO(false,"Invalid token",
+                    null));
+        }
+        if (!result.getEnabled()){
+            return ResponseEntity.ok().body(new ResponseDTO(false,"Email not verify",
+                    null));
+        }
+        userService.changePassword(result, passwordDTO.getNewPassword());
+        return ResponseEntity.ok().body(new ResponseDTO(true,"Change password successfully",
+                null));
     }
 
     @PostMapping("/authenticate")
