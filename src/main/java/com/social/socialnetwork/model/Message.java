@@ -16,8 +16,10 @@ public class Message {
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
     private String text;
-    private String imgLink;
-    private String videoLink;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Image imgLink;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Video videoLink;
 
     public Long getId() {
         return id;
@@ -43,19 +45,19 @@ public class Message {
         this.text = text;
     }
 
-    public String getImgLink() {
+    public Image getImgLink() {
         return imgLink;
     }
 
-    public void setImgLink(String imgLink) {
+    public void setImgLink(Image imgLink) {
         this.imgLink = imgLink;
     }
 
-    public String getVideoLink() {
+    public Video getVideoLink() {
         return videoLink;
     }
 
-    public void setVideoLink(String videoLink) {
+    public void setVideoLink(Video videoLink) {
         this.videoLink = videoLink;
     }
 }

@@ -14,13 +14,15 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
     private String content;
-    private String imgLink;
-    private String videoLink;
+    @OneToOne(cascade = {CascadeType.ALL})
+    private Image imgLink;
+    @OneToOne(cascade = {CascadeType.ALL})
+    private Video videoLink;
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Post post;
 
 
@@ -49,19 +51,19 @@ public class Comment {
         this.content = content;
     }
 
-    public String getImgLink() {
+    public Image getImgLink() {
         return imgLink;
     }
 
-    public void setImgLink(String imgLink) {
+    public void setImgLink(Image imgLink) {
         this.imgLink = imgLink;
     }
 
-    public String getVideoLink() {
+    public Video getVideoLink() {
         return videoLink;
     }
 
-    public void setVideoLink(String videoLink) {
+    public void setVideoLink(Video videoLink) {
         this.videoLink = videoLink;
     }
 }
