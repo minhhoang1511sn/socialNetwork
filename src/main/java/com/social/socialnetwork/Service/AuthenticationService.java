@@ -45,7 +45,6 @@ public class AuthenticationService {
                 .Enabled(request.getEnabled())
                 .build();
         return userRepository.save(user);
-
     }
 
     public AuthenticationResponse authenticate(AuthenticationReqest reqest) {

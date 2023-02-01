@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "confirmationToken")
+@Table(name = "confirmationCode")
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmationCode implements Serializable {
