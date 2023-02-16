@@ -36,6 +36,12 @@ public class UserController {
         List<User> userlist = userService.findAllUser();
         return ResponseEntity.ok().body(userlist);
     }
+    @GetMapping("/search-user")
+    public ResponseEntity<?> getUserByName(@RequestParam("query") String query){
+
+        List<User> user = userService.findUserByUserName(query);
+        return ResponseEntity.ok().body(user);
+    }
     @PutMapping("/user")
     public ResponseEntity<?> updateUser(@RequestBody UserReq userReq){
         User usersUpdate = userService.updateUser(userReq);

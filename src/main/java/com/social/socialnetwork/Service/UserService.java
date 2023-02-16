@@ -64,6 +64,9 @@ public class UserService {
     public User findUserByEmail(String email){
         return userRepository.findUserByEmail(email);
     }
+    public List<User> findUserByUserName(String query){
+        return userRepository.searchByFirstAndOrLastName(query);
+    }
     public void changePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
