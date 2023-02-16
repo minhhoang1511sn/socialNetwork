@@ -34,7 +34,12 @@ public class CommentController {
             return ResponseEntity.ok(new ResponseDTO(true, "Success", null));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ResponseDTO(false, "SubComment ID not exits", null));
+                .body(new ResponseDTO(false, "Comment ID not exits", null));
 
+    }
+    @PutMapping("/comment")
+    public ResponseEntity<?> updateComment(@RequestBody CommentReq commentReq){
+        Comment commentUpdate = commentService.updateComment(commentReq);
+        return ResponseEntity.ok(new ResponseDTO(true,"Success",commentUpdate));
     }
 }

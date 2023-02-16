@@ -61,12 +61,21 @@ public class CommentServiceIplm implements CommentService {
 
     @Override
     public Comment updateComment(CommentReq commentReq) {
-        Comment commentUpdate = findById(commentReq.getId());
-        if(commentUpdate != null) {
-            commentUpdate.setContent(commentUpdate.getContent());
-            commentUpdate.setNumReply(commentUpdate.getNumReply());
-            return commentUpdate;
-        } else throw new AppException(404, "Comment ID not found");
+        Long userId = Utils.getIdCurrentUser();
+        boolean check = userRepository.existsById(userId);
+        if(check){
+            Comment commentUpdate = findById(commentReq.getId());
+            if(commentUpdate.getUser().getId() == userId)
+            {
+                if(commentUpdate != null) {
+                    commentUpdate.setContent(commentReq.getContent());
+                    commentUpdate.setNumReply(commentReq.getNumReply());
+                    return commentUpdate;
+                } else throw new AppException(404, "Comment ID not found");
+            }
+            else  throw new AppException(500, "User don't have permission");
+        }
+        else throw new AppException(500, "User not found");
     }
 
     @Override

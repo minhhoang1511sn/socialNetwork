@@ -10,4 +10,5 @@ public class CommentReq {
     private Long postId;
     private Long parentCommentId;
     private Long userId;
+    private Long numReply;
 }
