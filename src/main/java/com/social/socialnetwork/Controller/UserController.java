@@ -4,7 +4,9 @@ import com.social.socialnetwork.Service.UserService;
 import com.social.socialnetwork.dto.PasswordDTO;
 import com.social.socialnetwork.dto.ResponseDTO;
 import com.social.socialnetwork.dto.UserReq;
+import com.social.socialnetwork.exception.AppException;
 import com.social.socialnetwork.model.User;
+import com.social.socialnetwork.repository.UserRepository;
 import freemarker.template.TemplateException;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -64,7 +66,16 @@ public class UserController {
         return ResponseEntity.ok().body(new ResponseDTO(true,"Password Changed Successfully",
                 null));
     }
-
+        @DeleteMapping("/admin/delete-user/{id}")
+        public ResponseEntity<?> DeleteUser(@PathVariable Long id){
+            boolean check = userService.deleteUser(id);
+            if(check)
+            return  ResponseEntity.ok().body(new ResponseDTO(true,"User has been deleted success",
+                    null));
+            else
+                return  ResponseEntity.ok().body(new ResponseDTO(false,"User cannot deleted",
+                        null));
+        }
 
     @PutMapping(value = "/user/avatar",consumes = {
             "multipart/form-data"})

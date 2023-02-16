@@ -94,6 +94,18 @@ public class UserServiceIplm implements UserService {
         return users;
     }
 
+    public boolean deleteUser(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null)
+        {
+            ConfirmationCode c = confirmationCodeRepository.findVerificationCodeByUserEmail(user.getEmail());
+            confirmationCodeRepository.deleteById(c.getId());
+            userRepository.delete(user);
+            return  true;
+        }
+        else
+            throw new AppException(404, "User ID not found");
+    }
 
     public boolean checkIfValidOldPassword(User user, String oldPassword) {
         return passwordEncoder.matches(oldPassword, user.getPassword());

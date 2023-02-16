@@ -18,7 +18,7 @@ public interface UserService {
      void changePassword(User user, String newPassword);
      ConfirmationCode SendVerifyCode(String email);
      User validatePasswordResetCode(String code, String email);
-
+     boolean deleteUser(Long id);
 
      boolean checkIfValidOldPassword(User user, String oldPassword);
      String upAvartar(MultipartFile file)  throws IOException ;
