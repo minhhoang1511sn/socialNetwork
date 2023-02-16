@@ -51,24 +51,45 @@ public class CommentServiceIplm implements CommentService {
         }
     }
 
-    @Override
-    public Comment editComment(CommentReq commentReq) {
-        return null;
-    }
 
     @Override
-    public List<Comment> getAllCommentByPost(Post post) {
-        return null;
+    public List<Comment> getAllCommentByPost(Long postid) {
+        Post post = postRepository.getReferenceById(postid);
+        List<Comment> commentList = commentRepository.getCommentByPost(post);
+        return commentList;
     }
 
     @Override
     public Comment updateComment(CommentReq commentReq) {
-        return null;
+        Comment commentUpdate = findById(commentReq.getId());
+        if(commentUpdate != null) {
+            commentUpdate.setContent(commentUpdate.getContent());
+            commentUpdate.setNumReply(commentUpdate.getNumReply());
+            return commentUpdate;
+        } else throw new AppException(404, "Comment ID not found");
     }
 
     @Override
     public boolean deleteComment(Long id) {
-        return false;
+        Comment comment = commentRepository.findById(id).orElse(null);
+        Long currentUser = Utils.getIdCurrentUser();
+        if(currentUser == comment.getUser().getId())
+        {
+            if(comment != null){
+                commentRepository.deleteById(id);
+                Post post = comment.getPost();
+                List<Comment> commentList = post.getCommentList();
+                commentList.remove(comment);
+                post.setCommentList(commentList);
+                return  true;
+            }
+            else{
+                throw new AppException(404, "Comment ID not found");
+            }
+        }
+        else{
+            throw new AppException(500, "User don't have permission to delete this comment");
+        }
     }
 
     @Override
