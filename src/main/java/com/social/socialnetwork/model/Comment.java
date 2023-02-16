@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+import java.util.List;
+
 @Data
 @Entity
 @AllArgsConstructor
@@ -17,13 +20,18 @@ public class Comment {
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
     private String content;
-    @OneToOne(cascade = {CascadeType.ALL})
-    private Image imgLink;
-    @OneToOne(cascade = {CascadeType.ALL})
-    private Video videoLink;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Post post;
+    private Double rate;
+    private Long numReply;
+    private Date createTime;
+    @JsonIgnore
+    @ManyToOne()
+    private Comment parentComment;
+
+    @OneToMany(mappedBy = "parentComment",cascade = CascadeType.REMOVE)
+    private List<Comment> listSubComment;
 
 
 
@@ -51,19 +59,4 @@ public class Comment {
         this.content = content;
     }
 
-    public Image getImgLink() {
-        return imgLink;
-    }
-
-    public void setImgLink(Image imgLink) {
-        this.imgLink = imgLink;
-    }
-
-    public Video getVideoLink() {
-        return videoLink;
-    }
-
-    public void setVideoLink(Video videoLink) {
-        this.videoLink = videoLink;
-    }
 }
