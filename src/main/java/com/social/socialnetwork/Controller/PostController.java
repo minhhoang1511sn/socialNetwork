@@ -40,6 +40,16 @@ public class PostController {
             return ResponseEntity.ok(new ResponseDTO(false, e.getMessage(), null));
         }
     }
+    @DeleteMapping("/delete-post/{id}")
+    public ResponseEntity<?> deletePost( @PathVariable Long id)
+    {
+        if (postService.deletePost(id)) {
+            return ResponseEntity.ok(new ResponseDTO(true, "Success", null));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ResponseDTO(false, "SubComment ID not exits", null));
+
+    }
     @PostMapping(value = "/list-of-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> listOfImages(@RequestParam Long postId, @RequestParam List<MultipartFile> images) throws IOException {
         List<String> urls = postService.uploadListofImage(postId,images);

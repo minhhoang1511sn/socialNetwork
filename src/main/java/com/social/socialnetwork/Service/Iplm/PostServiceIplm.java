@@ -5,10 +5,7 @@ import com.social.socialnetwork.Service.PostService;
 import com.social.socialnetwork.dto.PostReq;
 import com.social.socialnetwork.exception.AppException;
 import com.social.socialnetwork.model.*;
-import com.social.socialnetwork.repository.ImageRepository;
-import com.social.socialnetwork.repository.PostRepository;
-import com.social.socialnetwork.repository.UserRepository;
-import com.social.socialnetwork.repository.VideoRepository;
+import com.social.socialnetwork.repository.*;
 import com.social.socialnetwork.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,6 +27,7 @@ public class PostServiceIplm implements PostService {
     private final CloudinaryUpload cloudinaryUpload;
     private final ImageRepository imageRepository;
     private final VideoRepository videoRepository;
+    private final CommentRepository commentRepository;
     private final ModelMapper modelMapper;
     @Override
     public Post createPost(PostReq postReq)
@@ -56,7 +54,23 @@ public class PostServiceIplm implements PostService {
         return post.orElse(null);
 
     }
-
+    @Override
+    public boolean deletePost(Long id){
+        Long idCurrentUser = Utils.getIdCurrentUser();
+        Post postDelete = postRepository.findById(id).orElse(null);
+        if(postDelete !=null && postDelete.getUser().getId() == idCurrentUser)
+        {
+            List<Image> imageList = postDelete.getImagesList();
+            List<Video> videoList = postDelete.getVideosList();
+            List<Comment> commentList = postDelete.getCommentList();
+            imageRepository.deleteAll(imageList);
+            videoRepository.deleteAll(videoList);
+            commentRepository.deleteAll(commentList);
+            postRepository.deleteById(id);
+            return true;
+        }
+        else throw new AppException(404, "Post does not exits.");
+    }
     @Override
     public List<Post> getAllPost()
     {
@@ -75,11 +89,11 @@ public class PostServiceIplm implements PostService {
             List<Image> imageList = postUpdate.getImagesList();
             List<Video> videoList = postUpdate.getVideosList();
             List<Comment> commentList = postUpdate.getCommentList();
+            PostType postType = postUpdate.getPostType();
             post.setCommentList(commentList);
             post.setImagesList(imageList);
             post.setVideosList(videoList);
             post.setCreateDate(new Date());
-            PostType postType = postUpdate.getPostType();
             post.setPostType(postType);
             return postRepository.save(post);
         }
