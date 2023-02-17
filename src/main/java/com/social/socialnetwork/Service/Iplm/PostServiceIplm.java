@@ -30,6 +30,7 @@ public class PostServiceIplm implements PostService {
     private final CloudinaryUpload cloudinaryUpload;
     private final ImageRepository imageRepository;
     private final VideoRepository videoRepository;
+    @Override
     public Post createPost(PostReq postReq)
     {
         Long idCurrentUser = Utils.getIdCurrentUser();
@@ -46,6 +47,7 @@ public class PostServiceIplm implements PostService {
             throw new AppException(404, "Product or Comment not exits.");
         }
     }
+    @Override
     public List<Post> getAllPost()
     {
         Long idCurrentUser = Utils.getIdCurrentUser();
@@ -54,6 +56,11 @@ public class PostServiceIplm implements PostService {
         return posts;
     }
 
+    @Override
+    public Post updatePost(PostReq postReq) {
+        return null;
+    }
+    @Override
     public List<String> uploadListofImage(Long postId, List<MultipartFile> images) {
         Long idCurrentUser = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(idCurrentUser);
@@ -85,6 +92,7 @@ public class PostServiceIplm implements PostService {
             return null;
 
     }
+    @Override
     public List<String> uploadListofVideo(Long postId, List<MultipartFile> VideoReqs){
         Long idCurrentUser = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(idCurrentUser);

@@ -29,15 +29,17 @@ public class UserServiceIplm implements UserService {
     private final CloudinaryUpload cloudinaryUpload;
     private final PasswordEncoder passwordEncoder;
     private final ConfirmationCodeRepository confirmationCodeRepository;
-
+    @Override
     public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
     }
+    @Override
     public List<User> findAllUser() {
         List<User> users = userRepository.findAll();
         return users;
     }
+    @Override
     public User updateUser(UserReq userReq){
         User userUpdate = findById(Utils.getIdCurrentUser());
         if (userUpdate != null) {
@@ -61,16 +63,20 @@ public class UserServiceIplm implements UserService {
         } else return null;
 
     }
+    @Override
     public User findUserByEmail(String email){
         return userRepository.findUserByEmail(email);
     }
+    @Override
     public List<User> findUserByUserName(String query){
         return userRepository.searchByFirstAndOrLastName(query);
     }
+    @Override
     public void changePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+    @Override
     public ConfirmationCode SendVerifyCode(String email) {
         ConfirmationCode verificationCode = confirmationCodeRepository.findVerificationCodeByUserEmail(email);
         if (verificationCode != null) {
@@ -81,6 +87,7 @@ public class UserServiceIplm implements UserService {
         }
         return null;
     }
+    @Override
     public User validatePasswordResetCode(String code, String email) {
         ConfirmationCode verificationToken
                 = confirmationCodeRepository.findVerificationCodeByCodeAndUser_Email(code, email);
@@ -93,7 +100,7 @@ public class UserServiceIplm implements UserService {
         confirmationCodeRepository.save(verificationToken);
         return users;
     }
-
+    @Override
     public boolean disabledUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user != null && user.getEnabled())
@@ -105,6 +112,7 @@ public class UserServiceIplm implements UserService {
         else
             throw new AppException(403, "User not found or can not disabled");
     }
+    @Override
     public boolean enabledUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user != null && !user.getEnabled())
@@ -116,10 +124,11 @@ public class UserServiceIplm implements UserService {
         else
             throw new AppException(403, "User not found or can not enabled");
     }
+    @Override
     public boolean checkIfValidOldPassword(User user, String oldPassword) {
         return passwordEncoder.matches(oldPassword, user.getPassword());
     }
-
+    @Override
     public String upAvartar(MultipartFile file) throws IOException {
         Long id = Utils.getIdCurrentUser();
         User user = findById(id);
@@ -136,7 +145,7 @@ public class UserServiceIplm implements UserService {
         userRepository.save(user);
         return imgUrl.getImgLink();
     }
-
+    @Override
     public User getCurrentUser() {
         Long id = Utils.getIdCurrentUser();
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(404, "Not found"));

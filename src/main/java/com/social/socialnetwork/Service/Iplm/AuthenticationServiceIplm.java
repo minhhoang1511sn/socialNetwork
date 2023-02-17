@@ -25,7 +25,7 @@ public class AuthenticationServiceIplm implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final ConfirmationCodeRepository confirmationCodeRepository;
 
-
+    @Override
     public User register(RegisterReqest request) {
         if (!GenericValidator.isEmail(request.getEmail()))
             throw new AppException(400, "Wrong email");
@@ -44,7 +44,7 @@ public class AuthenticationServiceIplm implements AuthenticationService {
                 .build();
         return userRepository.save(user);
     }
-
+    @Override
     public AuthenticationResponse authenticate(AuthenticationReqest reqest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -64,12 +64,13 @@ public class AuthenticationServiceIplm implements AuthenticationService {
                     .token(jwtToken).build();
         }
     }
-
+    @Override
     public void saveVerificationCodeForUser(User users, String token) {
         ConfirmationCode verificationToken = new ConfirmationCode(users, token);
         System.out.println(verificationToken.getExpirationTime());
         confirmationCodeRepository.save(verificationToken);
     }
+    @Override
     public AuthenticationResponse validateVerificationCode(String code, String email) {
         ConfirmationCode verificationCode
                 = confirmationCodeRepository.findVerificationCodeByCodeAndUser_Email(code, email);
@@ -91,7 +92,7 @@ public class AuthenticationServiceIplm implements AuthenticationService {
                 .token(jwtToken).build();
 
     }
-
+    @Override
     public User validateVerificationCodetoResetPassword(PasswordDTO passwordDTO) {
         ConfirmationCode verificationCode
                 = confirmationCodeRepository.findVerificationCodeByCodeAndUser_Email(passwordDTO.getVerifyCode(), passwordDTO.getEmail());

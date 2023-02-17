@@ -12,7 +12,7 @@ import java.util.List;
 public interface PostService {
      Post createPost(PostReq postReq);
      List<Post> getAllPost();
-
+     Post updatePost(PostReq postReq);
      List<String> uploadListofImage(Long postId, List<MultipartFile> images) ;
      List<String> uploadListofVideo(Long postId, List<MultipartFile> VideoReqs);
 }
