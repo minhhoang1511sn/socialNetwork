@@ -56,7 +56,7 @@ public class AuthenticationServiceIplm implements AuthenticationService {
                 .orElseThrow();
         if(!user.getEnabled())
         {
-            return null;
+            throw new AppException(400,"User not authenticate");
         }
         else {
             var jwtToken = jwtService.generateToken(user);
@@ -75,7 +75,7 @@ public class AuthenticationServiceIplm implements AuthenticationService {
                 = confirmationCodeRepository.findVerificationCodeByCodeAndUser_Email(code, email);
 
         if (verificationCode == null) {
-            return null;
+            throw new AppException(400,"User not validated");
         }
 
         User user = verificationCode.getUser();
