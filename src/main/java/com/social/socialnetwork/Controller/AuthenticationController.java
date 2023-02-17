@@ -62,12 +62,20 @@ public class AuthenticationController {
         return ResponseEntity.ok(result);
     }
     @PostMapping("/resetPassword")
-    public ResponseEntity<?> resetPassword(@RequestParam String email)
+    public ResponseEntity<?> resetPassword(@RequestBody PasswordDTO passwordDTO) {
+        User result = authenticationService.validateVerificationCodetoResetPassword(passwordDTO);
+        if(result==null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(result);
+    }
+    @PostMapping("/resetPasswordRequest")
+    public ResponseEntity<?> resetPasswordReq(@RequestBody PasswordDTO passwordDTO)
             throws MessagingException, TemplateException, IOException {
-        User user = userService.findUserByEmail(email);
+        User user = userService.findUserByEmail(passwordDTO.getEmail());
         if (user!= null && user.getEnabled()){
             String code = "";
-            code = userService.SendVerifyCode(email).getCode();
+            code = userService.SendVerifyCode(passwordDTO.getEmail()).getCode();
             Map<String,Object> model = new HashMap<>();
             model.put("code",code);
             model.put("title", RESET_PASSWORD_TOKEN);

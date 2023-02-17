@@ -2,9 +2,7 @@ package com.social.socialnetwork.Service.Iplm;
 
 import com.social.socialnetwork.Service.AuthenticationService;
 import com.social.socialnetwork.config.JwtService;
-import com.social.socialnetwork.dto.AuthenticationReqest;
-import com.social.socialnetwork.dto.AuthenticationResponse;
-import com.social.socialnetwork.dto.RegisterReqest;
+import com.social.socialnetwork.dto.*;
 import com.social.socialnetwork.exception.AppException;
 import com.social.socialnetwork.model.ConfirmationCode;
 import com.social.socialnetwork.model.Role;
@@ -26,6 +24,8 @@ public class AuthenticationServiceIplm implements AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final ConfirmationCodeRepository confirmationCodeRepository;
+
+
     public User register(RegisterReqest request) {
         if (!GenericValidator.isEmail(request.getEmail()))
             throw new AppException(400, "Wrong email");
@@ -90,5 +90,21 @@ public class AuthenticationServiceIplm implements AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken).build();
 
+    }
+
+    public User validateVerificationCodetoResetPassword(PasswordDTO passwordDTO) {
+        ConfirmationCode verificationCode
+                = confirmationCodeRepository.findVerificationCodeByCodeAndUser_Email(passwordDTO.getVerifyCode(), passwordDTO.getEmail());
+
+        if (verificationCode == null) {
+            throw new AppException(400,"User not validated");
+        }
+
+        User user = verificationCode.getUser();
+            verificationCode.setToken(null);
+            confirmationCodeRepository.save(verificationCode);
+            user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
+            userRepository.save(user);
+            return user;
     }
 }

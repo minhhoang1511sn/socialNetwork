@@ -13,6 +13,4 @@ public interface ConfirmationCodeRepository extends JpaRepository<ConfirmationCo
 
     ConfirmationCode findVerificationCodeByUserEmail(String email);
 
-    @Query("delete from ConfirmationCode c where c.user.id = ?1")
-    void deleteConfirmationCodeByUser(Long id);
 }

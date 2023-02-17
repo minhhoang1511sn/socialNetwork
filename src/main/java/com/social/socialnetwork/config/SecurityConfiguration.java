@@ -23,7 +23,9 @@ public class SecurityConfiguration {
             "/api/v1/auth/register-email",
             "/api/v1/auth/verifyRegistration",
             "/api/v1/auth/resetPassword",
-            "/api/v1/auth/authenticate"
+            "/api/v1/auth/authenticate",
+            "/api/v1/auth/resetPasswordRequest",
+            "/api/v1/auth/resetPassword"
     };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

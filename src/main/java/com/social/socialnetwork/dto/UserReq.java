@@ -17,5 +17,6 @@ public class UserReq {
     private Date birthday;
     private Role role;
     private Boolean Enabled;
+    private String email;
 
 }
