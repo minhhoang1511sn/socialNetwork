@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 @Data
 @Entity
@@ -28,6 +29,7 @@ public class Post {
     private List<Image> imagesList;
     @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
     private List<Video> videosList;
+    private Date createDate;
     public Long getId() {
         return id;
     }

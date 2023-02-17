@@ -4,22 +4,22 @@ import com.social.socialnetwork.Service.Cloudinary.CloudinaryUpload;
 import com.social.socialnetwork.Service.PostService;
 import com.social.socialnetwork.dto.PostReq;
 import com.social.socialnetwork.exception.AppException;
-import com.social.socialnetwork.model.Image;
-import com.social.socialnetwork.model.Post;
-import com.social.socialnetwork.model.User;
-import com.social.socialnetwork.model.Video;
+import com.social.socialnetwork.model.*;
 import com.social.socialnetwork.repository.ImageRepository;
 import com.social.socialnetwork.repository.PostRepository;
 import com.social.socialnetwork.repository.UserRepository;
 import com.social.socialnetwork.repository.VideoRepository;
 import com.social.socialnetwork.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -30,6 +30,7 @@ public class PostServiceIplm implements PostService {
     private final CloudinaryUpload cloudinaryUpload;
     private final ImageRepository imageRepository;
     private final VideoRepository videoRepository;
+    private final ModelMapper modelMapper;
     @Override
     public Post createPost(PostReq postReq)
     {
@@ -42,11 +43,20 @@ public class PostServiceIplm implements PostService {
             post.setCountLike(postReq.getCountLike());
             post.setPostType(postReq.getPostType());
             post.setUser(user);
+            post.setCreateDate(new Date());
             return postRepository.save(post);
         } else {
             throw new AppException(404, "Product or Comment not exits.");
         }
     }
+
+    @Override
+    public Post findById(Long id) {
+        Optional<Post> post = postRepository.findById(id);
+        return post.orElse(null);
+
+    }
+
     @Override
     public List<Post> getAllPost()
     {
@@ -58,7 +68,23 @@ public class PostServiceIplm implements PostService {
 
     @Override
     public Post updatePost(PostReq postReq) {
-        return null;
+        Post postUpdate = findById(postReq.getId());
+        if(postUpdate != null)
+        {
+            Post post = modelMapper.map(postReq,Post.class);
+            List<Image> imageList = postUpdate.getImagesList();
+            List<Video> videoList = postUpdate.getVideosList();
+            List<Comment> commentList = postUpdate.getCommentList();
+            post.setCommentList(commentList);
+            post.setImagesList(imageList);
+            post.setVideosList(videoList);
+            post.setCreateDate(new Date());
+            PostType postType = postUpdate.getPostType();
+            post.setPostType(postType);
+            return postRepository.save(post);
+        }
+        else
+            throw new AppException(400,"Post does not exists");
     }
     @Override
     public List<String> uploadListofImage(Long postId, List<MultipartFile> images) {

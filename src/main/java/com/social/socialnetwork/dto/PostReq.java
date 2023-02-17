@@ -3,6 +3,7 @@ package com.social.socialnetwork.dto;
 import com.social.socialnetwork.model.*;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -15,4 +16,5 @@ public class PostReq {
     private List<Video> videoList;
     private String content;
     private PostType postType;
+    private Date createDate;
 }

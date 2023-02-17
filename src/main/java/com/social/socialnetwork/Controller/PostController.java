@@ -32,7 +32,14 @@ public class PostController {
         }
 
     }
-
+    @PutMapping("/update-post")
+    public ResponseEntity<?> updatePost(@RequestBody PostReq postReq){
+        try {
+            return ResponseEntity.ok(new ResponseDTO(true, "Success", postService.updatePost(postReq)));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseDTO(false, e.getMessage(), null));
+        }
+    }
     @PostMapping(value = "/list-of-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> listOfImages(@RequestParam Long postId, @RequestParam List<MultipartFile> images) throws IOException {
         List<String> urls = postService.uploadListofImage(postId,images);
