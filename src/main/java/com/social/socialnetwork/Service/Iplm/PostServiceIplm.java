@@ -63,9 +63,21 @@ public class PostServiceIplm implements PostService {
             List<Image> imageList = postDelete.getImagesList();
             List<Video> videoList = postDelete.getVideosList();
             List<Comment> commentList = postDelete.getCommentList();
-            imageRepository.deleteAll(imageList);
-            videoRepository.deleteAll(videoList);
-            commentRepository.deleteAll(commentList);
+
+            for (Image image : imageList) {
+                imageRepository.deleteById(image.getId());
+            }
+            for (Video video : videoList) {
+                videoRepository.deleteById(video.getId());
+            }
+            for (Comment comment : commentList) {
+                commentRepository.deleteById(comment.getId());
+            }
+            postDelete.setPostType(null);
+            postDelete.setImagesList(null);
+            postDelete.setVideosList(null);
+            postDelete.setCommentList(null);
+            postDelete.setUser(null);
             postRepository.deleteById(id);
             return true;
         }
@@ -83,7 +95,8 @@ public class PostServiceIplm implements PostService {
     @Override
     public Post updatePost(PostReq postReq) {
         Post postUpdate = findById(postReq.getId());
-        if(postUpdate != null)
+        Long idCurrentUser = Utils.getIdCurrentUser();
+        if(postUpdate != null && idCurrentUser == postUpdate.getUser().getId())
         {
             Post post = modelMapper.map(postReq,Post.class);
             List<Image> imageList = postUpdate.getImagesList();

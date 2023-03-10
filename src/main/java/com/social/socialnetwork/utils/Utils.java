@@ -13,13 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 public class Utils {
     private static String pathMedia = "Media";
-    private static String pathImg = "Images";
-    private static String pathVideo = "Videos";
-
-
-    public static String getBaseURL(HttpServletRequest request) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-    }
 
     public static File convertMultiPartToFile(MultipartFile file) throws IOException {
         if (!Files.isDirectory(Path.of(pathMedia))){
