@@ -26,6 +26,8 @@ public class Comment {
     private Double rate;
     private Long numReply;
     private Date createTime;
+    @OneToOne(cascade = {CascadeType.ALL})
+    private Image image;
     @JsonIgnore
     @ManyToOne()
     private Comment parentComment;
